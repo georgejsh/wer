@@ -71,8 +71,8 @@ wstring trimAll(const wstring &s)
 {
     int curr = 0, val = 0;
     bool space = false;
-    while (s[curr] != '\0' && s[curr++] == ' ')
-        ;
+    while (s[curr] != '\0' && s[curr] == ' ')
+        curr++;
     wstring res(s.length() * 2, ' ');
     while (s[curr] != '\0')
     {
