@@ -5,20 +5,27 @@ WER and SER Calculation
 + Support for wild string
 + Trim spaces everywhere
 + Each non alpha numeric as a word
++ Add multiple word matching option
 ## Build
 + g++ wer.cpp
 ## Output
 ./a.out ref.txt asr.txt  
 
-Ref:dv − ß nSt ö r
+Ref: adv − ß nSt ö r 
 
-Hyp:dv − ß nSt ö r
+Hyp: adv − ß nSt ö r 
 
 WER: 0 SER: 0
 
-Ref: + 2 - 3 / 4
+Ref: 1 + 2 - 3 / 4 
 
-Hyp: + 2 - 3 / 4
+Hyp: 1 + 2 - 3 / 4 
+
+WER: 0 SER: 0
+
+Ref: x [al,p,pqr,a] y 
+
+Hyp: x pqr y 
 
 WER: 0 SER: 0
 

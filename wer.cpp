@@ -8,9 +8,23 @@
 #include <fstream>
 #include <streambuf>
 using namespace std;
-
-typedef vector<wstring> Sentence;
-
+typedef vector<wstring> word_l;
+typedef vector<word_l> Sentence;
+bool operator==(const word_l & lhs, const word_l& rhs){
+    if(lhs.size()==1 && rhs.size()==1) return lhs[0]==rhs[0];
+    if(lhs.size()>1){
+        for(auto w:lhs){
+            if(w==rhs[0]) return true;
+        }
+        return false;
+    }else{
+        for(auto w:rhs){
+            if(w==lhs[0]) return true;
+        }
+        return false;
+    }
+}
+/*
 Sentence &split(const wstring &s, wchar_t delim, Sentence &elems)
 {
     wstringstream ss(s);
@@ -28,7 +42,7 @@ Sentence split(const wstring &s, wchar_t delim)
     split(s, delim, elems);
     return elems;
 }
-/*
+
 unsigned int countw(string const& str)
 {
     stringstream stream(str);
@@ -67,12 +81,12 @@ wstring s2ws(const string &s)
     setlocale(LC_ALL, curLocale.c_str());
     return result;
 }
-wstring trimAll(const wstring &s)
+wstring trim(const wstring &s)
 {
     int curr = 0, val = 0;
     bool space = false;
-    while (s[curr] != '\0' && s[curr++] == ' ')
-        ;
+    while (s[curr] != '\0' && s[curr] == ' ')
+        curr++;
     wstring res(s.length() * 2, ' ');
     while (s[curr] != '\0')
     {
@@ -102,6 +116,96 @@ wstring trimAll(const wstring &s)
     res.resize(val);
     return res;
 }
+word_l find_word(const wstring &s, size_t start, size_t end){
+    word_l list_w;
+    wstringstream ss(s.substr(start,end)+L'^');
+   // wcout<<"String:"<<end<<"xxx "<<s.substr(start,end)<<endl;
+    wstring item;
+    while (getline(ss, item, L'^'))
+    {
+        item=trim(item);
+        list_w.push_back(item);
+    }
+    return list_w;
+}
+Sentence parse_to_sentence(const wstring &s)
+{
+    size_t curr = 0, val = 0;
+    bool space = false;
+    while (s[curr] != '\0' && s[curr] == ' ') curr++;
+    Sentence result;
+    word_l w_l;
+    wstring word;
+    while (s[curr] != '\0')
+    {
+        if(s[curr]=='['){
+            if(word.size()>0) {
+                w_l.push_back(word);
+                result.push_back(w_l);
+                word=L"";
+                w_l.clear();
+            }
+            size_t  found = s.find(']', curr+1);
+            if (found == wstring::npos) return result;
+            result.push_back(find_word(s,curr+1,found-curr-1));
+            space=true;
+            curr=found+1;
+        }
+        else if (s[curr] != ' ' && !isalnum(s[curr]))
+        {
+            if(word.size()>0) {
+                w_l.push_back(word);
+                result.push_back(w_l);
+                word=L"";
+                w_l.clear();
+            }
+            word=s[curr++];
+            w_l.push_back(word);
+            result.push_back(w_l);
+            word=L"";
+            w_l.clear();
+            space=true;
+        }
+        else if (s[curr] != ' ')
+        {
+            word+=s[curr++];
+            space = false;
+        }
+        else if (!space)
+        {
+            w_l.push_back(word);
+            result.push_back(w_l);
+            word=L"";
+            w_l.clear();
+            space=true;
+            curr++;
+        }
+        else
+            curr++;
+    }
+    if(word.size()>0){
+        w_l.push_back(word);
+        result.push_back(w_l);
+    }
+   return result;
+}
+void print_sentence(Sentence &s){
+    //wcout<<"Sentence:";
+    for(auto wl:s){
+            if(wl.size()==1){
+                wcout<<wl[0]<<" ";
+            }else{
+                wcout<<"[";
+                for(int i=0;i<wl.size();i++)
+                    if(i!=wl.size()-1)
+                        wcout<<wl[i]<<",";
+                    else
+                        wcout<<wl[i];
+                wcout<<"] ";
+            }
+        }
+    wcout<<endl;
+}
 int main(int argc, char *argv[])
 {
 
@@ -128,30 +232,28 @@ int main(int argc, char *argv[])
     while (getline(org_file, org))
     {
         getline(asr_file, asr);
-        wstring org_line = trimAll(s2ws(org));
-        wstring asr_line = trimAll(s2ws(asr));
+        //wstring org_line = trimAll(s2ws(org));
+        //wstring asr_line = trimAll(s2ws(asr));
         //wcout << org_line << endl;
         //wcout << asr_line << endl;
+        Sentence s1=parse_to_sentence(s2ws(org));
+        //print_sentence(s1);
+        Sentence s2=parse_to_sentence(s2ws(asr));
+       // print_sentence(s2);
+        //continue;
+       
+        total_line++;
 
-        bool ser = false;
-
-        if (org_line.compare(asr_line) != 0)
-        {
-            total_line_no_match = total_line_no_match + 1;
-            ser = true;
-        }
-
-        total_line = total_line + 1;
-
-        s1 = split(org_line, ' ');
-        s2 = split(asr_line, ' ');
-
-        float w = edit_distance(s1, s2);
+        
+        int w = edit_distance(s1, s2);
         wer = wer + w;
+        total_line_no_match+=(w>0?1:0);
         total_wc = total_wc + s1.size(); //countw(org_line);
-        wcout << "Ref:" << org_line << endl;
-        wcout << "Hyp:" << asr_line << endl;
-        wcout << "WER: " << w << " SER: " << ser << endl;
+        wcout << "Ref: " ;
+        print_sentence(s1);
+        wcout << "Hyp: " ;
+        print_sentence(s2);
+        wcout << "WER: " << w << " SER: " << (w>0?1:0) << endl;
     }
 
     wcout << "FINAL WER = " << wer / total_wc << "   ";
