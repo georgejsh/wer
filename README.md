@@ -7,9 +7,13 @@ WER and SER Calculation
 + Each non alpha numeric as a word
 + Add multiple word matching option
 ## Build
-+ g++ wer.cpp
++ aclocal
++ autoconf
++ automake --add-missing
++ ./configure
++ make
 ## Output
-./a.out ref.txt asr.txt  
+./wer ref.txt asr.txt  
 
 Ref: adv − ß nSt ö r 
 
