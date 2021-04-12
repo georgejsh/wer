@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: configure
-      run: aclocal;autoconf;automake;./configure
+      run: aclocal;autoconf;automake --add-missing;./configure
     - name: make
       run: make
     - name: make check
