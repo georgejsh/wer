@@ -5,7 +5,7 @@ WER and SER Calculation
 + Support for wild string
 + Trim spaces everywhere
 + Each non alpha numeric as a word
-+ Add multiple word matching option
++ Multiple words optional matching
 ## Build
 + aclocal
 + autoconf
