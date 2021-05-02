@@ -156,7 +156,7 @@ wstring trim(const wstring &s)
     wstring res(s.length() * 2, ' ');
     while (s[curr] != '\0')
     {
-        if (s[curr] != ' ' && !isalnum(s[curr]))
+        if (s[curr] != ' ' && !iswalnum(s[curr]))
         {
             if (!space)
                 res[val++] = ' ';
@@ -222,7 +222,7 @@ Sentence parse_to_sentence(const wstring &s)
             space = true;
             curr = found + 1;
         }
-        else if (s[curr] != ' ' && !isalnum(s[curr]))
+        else if (s[curr] != ' ' && !iswalnum(s[curr]))
         {
             if (word.size() > 0)
             {
