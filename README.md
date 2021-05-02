@@ -25,9 +25,21 @@ Hyp: a e c d
 
 WER: 0 SER: 0
 
-Ref: adv − ß nSt ö r 
+Ref: a [e c,b d] d 
 
-Hyp: adv − ß nSt ö r 
+Hyp: a e b d 
+
+WER: 1 SER: 1
+
+Ref: a [e c,] d 
+
+Hyp: a d 
+
+WER: 0 SER: 0
+
+Ref: adv − ßnStör 
+
+Hyp: adv − ßnStör 
 
 WER: 0 SER: 0
 
@@ -43,4 +55,5 @@ Hyp: x pqr y
 
 WER: 0 SER: 0
 
-FINAL WER = 0.0454545   FINAL SER = 0.2
+
+FINAL WER = 0.0526316   FINAL SER = 0.2
