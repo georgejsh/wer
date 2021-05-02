@@ -13,7 +13,17 @@ WER and SER Calculation
 + ./configure
 + make
 ## Output
-./wer ref.txt asr.txt  
+Ref: a [e c,b d] d 
+
+Hyp: a e b d 
+
+WER: 1 SER: 1
+
+Ref: a [e c,] d 
+
+Hyp: a e c d 
+
+WER: 0 SER: 0
 
 Ref: a [e c,b d] d 
 
@@ -44,5 +54,6 @@ Ref: x [al,p,pqr,a] y
 Hyp: x pqr y 
 
 WER: 0 SER: 0
+
 
 FINAL WER = 0.0526316   FINAL SER = 0.2
