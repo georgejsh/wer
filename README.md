@@ -1,5 +1,6 @@
 # WER
 WER and SER Calculation
+
 Tutorial Video : https://www.youtube.com/watch?v=8rzxSgLGoYo
 ## Features
 + Support for wild string
